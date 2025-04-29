@@ -53,4 +53,39 @@ const create = async (req, res) => {
     }
 }
 
-module.exports = { getAll, getById, create };
+const update = async (req, res) => {
+    try {
+        let updateduser = {};
+        if (req.body.email) {
+            updateduser.email = req.body.email;
+        }
+        if (req.body.password) {
+            updateduser.password = bcrypt.hashSync(req.body.password, 10);
+        }
+        const user = await User.updateOne(updateduser, {
+            where: {
+                id: req.params.id
+            }
+        });
+        return res.status(200).json(user);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+}
+
+const remove = async (req, res) => {
+    const result = await User.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
+    if(result === 1){
+        return res.status(204).json();
+    }else if(result > 1){
+        return res.status(500).json({error: "Erreur lors de la suppression"});
+    }else{
+        return res.status(404).json({error: "User not found"});
+    }
+}
+
+module.exports = { getAll, getById, create, update, remove };
