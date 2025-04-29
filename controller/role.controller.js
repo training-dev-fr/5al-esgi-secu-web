@@ -1,17 +1,17 @@
-const User = require('./../model/user.schema.js');
+const Role = require('./../model/role.schema.js');
 const bcrypt = require('bcryptjs');
 
 
 const getAll = async (req, res) => {
     try {
-        let result = await User.findAll();
+        let result = await Role.findAll();
         if (result.length === 0) {
             return res.status(204).json();
         }
-        return res.status(200).json(result.map(user => {
+        return res.status(200).json(result.map(role => {
             return {
-                id: user.id,
-                email: user.email
+                id: role.id,
+                email: role.email
             }
         }));
     } catch (e) {
@@ -21,17 +21,17 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
-        let user = await User.findOne({
+        let role = await Role.findOne({
             where: {
                 id: req.params.id
             }
         });
-        if (!user) {
+        if (!role) {
             return res.status(204).json();
         }
         return res.status(200).json({
-            id: user.id,
-            email: user.email
+            id: role.id,
+            email: role.email
         });
     } catch (e) {
         return res.status(500).json({ error: e.message });
@@ -40,10 +40,10 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        let user = await User.create(req.body);
+        let role = await Role.create(req.body);
         return res.status(201).json({
-            id: user.id,
-            email: user.email
+            id: role.id,
+            name: role.name
         });
     } catch (e) {
         return res.status(500).json({ error: e.message });
@@ -52,21 +52,19 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        let updateduser = {};
-
-        const user = await User.updateOne(updateduser, {
+        const role = await Role.updateOne(req.body, {
             where: {
                 id: req.params.id
             }
         });
-        return res.status(200).json(user);
+        return res.status(200).json(role);
     } catch (e) {
         return res.status(500).json({ error: e.message });
     }
 }
 
 const remove = async (req, res) => {
-    const result = await User.destroy({
+    const result = await Role.destroy({
         where: {
             id: req.params.id
         }
@@ -76,7 +74,7 @@ const remove = async (req, res) => {
     }else if(result > 1){
         return res.status(500).json({error: "Erreur lors de la suppression"});
     }else{
-        return res.status(404).json({error: "User not found"});
+        return res.status(404).json({error: "Role not found"});
     }
 }
 
