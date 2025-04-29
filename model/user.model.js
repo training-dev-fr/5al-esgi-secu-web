@@ -7,12 +7,15 @@ const findAll = async () => {
     return listUser;
 }
 
-const findOne = async () => {
-
+const findOne = async (options) => {
+    if(!options.where && listUser.length > 0){
+        return listUser[0];
+    }
+    return listUser.find(user => checkWhereClause(user,options));
 }
 
 const create = async (user) => {
-    let newUser = {id : ++currentId, ...user};
+    let newUser = {...user,id : ++currentId};
     listUser.push(newUser);
     fs.writeFileSync(USER_FILE, JSON.stringify(listUser));
     return newUser;
@@ -24,6 +27,18 @@ const updateOne = async () => {
 
 const destroy = async () => {
 
+}
+
+const checkWhereClause = (user, options) => {
+    for(let [field, value] of Object.entries(options.where)){
+        if(typeof user[field] === 'number'){
+            value = parseInt(value);
+        }
+        if(user[field] !== value){
+            return false;
+        }
+    }
+    return true;
 }
 
 module.exports = { findAll, findOne, create, updateOne, destroy };
