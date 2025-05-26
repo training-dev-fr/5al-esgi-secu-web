@@ -1,0 +1,4 @@
+26/05/2025 10:13:04 / GET ::1
+26/05/2025 10:13:40 /auth/login POST ::1 {"email":"avaast@myges.fr","password":"123456"} "application/json"
+26/05/2025 10:14:50 /auth/login POST ::1 {"email":"avaast@myges.fr","password":"123456"} "application/json"
+26/05/2025 10:15:09 /auth/login POST ::1 {"email":"avaast@myges.fr","password":"********"} "application/json"
